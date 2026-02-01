@@ -1,18 +1,57 @@
 import Button from "@/components/commons/Button";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { MoviesProps } from "@/interfaces";
+
 const Home: React.FC = () => {
   const router = useRouter();
+  const [backgroundImage, setBackgroundImage] = useState<string>(
+    "/3d-rendering-person-watching-movie-with-popcorn.jpg"
+  );
+  const [heroMovie, setHeroMovie] = useState<MoviesProps | null>(null);
+
+  useEffect(() => {
+    const fetchHeroMovie = async () => {
+      try {
+        const response = await fetch("/api/fetch-movies", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ page: 1, year: "", genre: "" }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const firstMovie = data.movies?.[0];
+          
+          if (firstMovie && firstMovie.primaryImage?.url) {
+            setHeroMovie(firstMovie);
+            setBackgroundImage(firstMovie.primaryImage.url);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch hero movie:", error);
+      }
+    };
+
+    fetchHeroMovie();
+  }, []);
 
   return (
     <div className="bg-[#171D22] text-white">
       <section
-        className="h-screen bg-cover bg-center"
+        className="relative h-screen flex items-center justify-center"
         style={{
-          backgroundImage:
-            'url("https://themebeyond.com/html/movflx/img/bg/breadcrumb_bg.jpg")',
+          backgroundImage: 'url("/3d-rendering-person-watching-movie-with-popcorn.jpg")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundColor: "#171D22",
         }}
       >
-        <div className="bg-black bg-opacity-50 h-full flex flex-col justify-center items-center text-center">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/50 to-black/80"></div>
+        <div className="relative z-10 text-center">
           <h1 className="text-5xl md:text-7xl font-bold mb-8">
             Discover Your Next Favorite{" "}
             <span className="text-[#E2D609]">Movie</span>

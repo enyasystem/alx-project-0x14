@@ -1,47 +1,38 @@
-import React from 'react';
-import Image from 'next/image';
+import { MovieProps } from "@/interfaces"
+import Image from "next/image"
+import { useState } from "react"
 
-interface MovieCardProps {
-  id: string;
-  title: string;
-  year: number;
-  imageUrl?: string;
-  onClick?: () => void;
-}
+const MovieCard: React.FC<MovieProps> = ({ title, posterImage, releaseYear }) => {
+  const [imageError, setImageError] = useState(false)
 
-const MovieCard: React.FC<MovieCardProps> = ({
-  id,
-  title,
-  year,
-  imageUrl,
-  onClick,
-}) => {
   return (
-    <div
-      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-      onClick={onClick}
-    >
-      <div className="relative h-64 w-full bg-gray-200">
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
+    <div className="h-[563px]">
+      <div className="bg-gray-800 rounded-md overflow-hidden h-[430px] flex items-center justify-center">
+        {!imageError && posterImage && posterImage !== '/placeholder.jpg' ? (
+          <Image 
+            className="w-full h-full object-cover hover:cursor-pointer" 
+            src={posterImage} 
+            width={300} 
+            height={430} 
             alt={title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            onError={() => setImageError(true)}
+            unoptimized
           />
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-400">
-            No Image
+          <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center">
+            <div className="text-center">
+              <p className="text-gray-400 text-sm">No Image Available</p>
+              <p className="text-gray-500 text-xs mt-2">{title}</p>
+            </div>
           </div>
         )}
       </div>
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-800 truncate">{title}</h3>
-        <p className="text-sm text-gray-600 mt-2">Year: {year}</p>
+      <div className="flex justify-between py-4">
+        <p className="text-xl font-bold truncate">{title}</p>
+        <p className="text-xl text-[#E2D609]">{releaseYear}</p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MovieCard;
+export default MovieCard
