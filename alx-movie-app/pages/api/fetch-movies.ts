@@ -62,7 +62,12 @@ export default async function handler (request: NextApiRequest, response: NextAp
                 }
               }));
 
-              return resolve(response.status(200).json({ movies }));
+              // Remove duplicate movies by ID
+              const uniqueMovies = Array.from(
+                new Map(movies.map(movie => [movie.id, movie])).values()
+              );
+
+              return resolve(response.status(200).json({ movies: uniqueMovies }));
             } catch (error) {
               console.error("Parse Error:", error);
               return resolve(response.status(500).json({ error: "Failed to parse response", message: error instanceof Error ? error.message : "Unknown error" }));
