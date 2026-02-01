@@ -1,30 +1,11 @@
-import React from 'react';
+import { ButtonProps } from "@/interfaces";
 
-interface ButtonProps {
-  label: string;
-  onClick?: () => void;
-  className?: string;
-  type?: 'button' | 'submit' | 'reset';
-  disabled?: boolean;
-}
-
-const Button: React.FC<ButtonProps> = ({
-  label,
-  onClick,
-  className = '',
-  type = 'button',
-  disabled = false,
-}) => {
+const Button: React.FC<ButtonProps> = ({ title, action }) => {
   return (
-    <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 ${className}`}
-    >
-      {label}
+    <button onClick={action} className="px-8 py-2 border-2 border-[#E2D609] rounded-full hover:bg-[#E2D609] hover:text-black transition-colors duration-300">
+      {title}
     </button>
-  );
-};
+  )
+}
 
 export default Button;
